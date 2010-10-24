@@ -3,11 +3,11 @@
   
   if(is_signed_in()) {
     set_notice("You can't sign up while signed in. Sign out and try again.");
-    // Already logged in, can't sign up while logged in
-    redirect_to('my_books.php');
+    // Already signed in, can't sign up while logged in
+    redirect_to(Config::get()->signed_in_page());
     exit;
   }
-  elseif(isset($_POST['username'], $_POST['password'], $_POST['confirm'])) {
+  elseif(isset($_POST['username'], $_POST['email'], $_POST['password'], $_POST['confirm'])) {
     if($_POST['password'] != $_POST['confirm']) {
       set_notice("Password confirmation failed, retype your password and try again.");
     }
@@ -20,6 +20,7 @@
         $_POST = array();
       }
     }
+    set_notice("You didn't fill out the whole form, please make sure you fill out everything!");
   }
   
   $title = "Sign up";
@@ -31,11 +32,13 @@
     <legend>Sign up</legend>
     <label for="username">Username: </label>
     <input name="username" type="text" id="username" value="<?php echo $_POST['username']; ?>" /><br />
+    <label for="email">Email: </label>
+    <input name="email" type="text" id="email" value="<?php echo $_POST['email']; ?>" /><br />
     <label for="password">Password: </label>
     <input name="password" type="password" id="password" /><br />
     <label for="confirm">Confirm: </label>
     <input name="confirm" type="password" id="confirm" /><br />
-    <input name="submit" type="submit" id="submit" value="Sign up!" />
+    <input name="submit" type="submit" class="button" id="submit" value="Sign up!" />
   </fieldset>
 </form>
 

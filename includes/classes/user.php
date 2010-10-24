@@ -6,25 +6,22 @@
 
 class User {
   public $id;
-  public $stylesheet_id;
   public $username;
   
+  private $db = false;
   private $config = false;
   
   function __construct($id = false) {
-    $this->config = Config::get_instance();
+    $this->config = Config::get();
+    $this->db = new Database();
+    
     if($id)
       $this->load_user($id);
   }
   
-  public static function create_new($username, $password, $stylesheet_id = false) {
-    $user = new User();
-    
-    if(!$stylesheet_id)
-      $stylesheet_id = $user->config->default_stylesheet_id;
-      
+  public function create_new($username, $password) {    
     // Make sure the user doesn't exist
-    $username_query = Database::get_instance()->query(
+    $username_query = $this->db->query(
       "SELECT id 
        FROM users 
        WHERE username = ?", 
@@ -36,63 +33,69 @@ class User {
     }
     
     // Create the user
-    $id = Database::get_instance()->query(
+    $id = $this->db->query(
       "INSERT INTO users
-       (username, password, stylesheet_id)
-       VALUES (?, ?, ?)",
-      array($username, $user->hash_password($password), $stylesheet_id));
+       (username, password)
+       VALUES (?, ?)",
+      array($username, hash_password($password)));
     
-    $user->load_user($id);
+    $this->load_user($id);
     
-    return $user;
+    return true;
   }
   
-  public static function sign_in($username, $password) {
-    $user = new User();
+  public function oauth_create_new($oauth_id, $username) {
     
-    $user_data = Database::get_instance()->query(
-      "SELECT id, username, stylesheet_id 
+  }
+  
+  public function sign_in($username, $password) {
+    $user_data = $this->db->query(
+      "SELECT id, username
        FROM users 
        WHERE username = ? 
        AND password = ?", 
-      array($username,
-        $user->hash_password($password)));
+      array($username, hash_password($password)));
     
     if($user_data) {
-      $user->load_user($user_data[0]['id'], 
-        $user_data[0]['username'], 
-        $user_data[0]['stylesheet_id']);
-      return $user;
+      $this->load_user($user_data[0]['id'], 
+        $user_data[0]['username']);
+      return true;
     }
     else {
       return false;
     }    
   }
   
-  public function set_stylesheet($stylesheet_id) {
-    Database::get_instance()->query(
-      "UPDATE users
-       SET stylesheet_id = ?
-       WHERE id = ?",
-      array($stylesheet_id, $this->id));
-    $this->stylesheet_id = $stylesheet_id;
+  public function oauth_sign_in($oauth_id) {
+    $user_data = $this->db->query(
+      "SELECT id, username
+       FROM users 
+       WHERE oauth_id = ?", 
+      array($oauth_id));
+      
+    if($user_data) {
+      $this->load_user($user_data[0]['id'], 
+        $user_data[0]['username']);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
   
   private function load_user($id, $username = false, $stylesheet_id = false) {
     if($username AND $stylesheet_id) {
       $this->id = $id;
       $this->username = $username;
-      $this->stylesheet_id = $stylesheet_id;
     }
     else {
-      $user_data = Database::get_instance()->query(
-        "SELECT username, stylesheet_id 
+      $user_data = $this->db->query(
+        "SELECT username 
          FROM users 
          WHERE id = ?", 
         array($id));
       $this->id = $id;
       $this->username = $user_data[0]['username'];
-      $this->stylesheet_id = $user_data[0]['stylesheet_id'];
     }
   }
   

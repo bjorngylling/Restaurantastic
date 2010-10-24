@@ -10,7 +10,7 @@ class Database {
   private $con = false;
   
   public function __construct() {
-    $this->config = Config::get_instance();
+    $this->config = Config::get();
     $this->connect();
   }
   

@@ -1,13 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf8" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     
     <title>Restaurantastic<?php if($title) echo " - $title"; ?></title>
     
-    <link rel="stylesheet" href="media/css/reset.css" type="text/css" media="screen" charset="utf8" />
-    <link rel="stylesheet" href="media/css/master.css" type="text/css" media="screen" charset="utf8" />
+    <link rel="stylesheet" href="media/css/reset.css" type="text/css" media="screen" charset="utf8">
+    <link rel="stylesheet" href="media/css/master.css" type="text/css" media="screen" charset="utf8">
   </head>
   
   <body>
@@ -26,7 +25,6 @@
           else { ?>
             <ul>
     	        <li><a href="index.php">index</a> &bull; </li>
-    	        <li><a href="sign_up.php">Sign up</a> &bull; </li>
               <li><a href="sign_in.php">Sign in</a></li>
             </ul>
           <?php } ?>
