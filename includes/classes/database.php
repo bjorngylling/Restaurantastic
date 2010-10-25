@@ -12,6 +12,7 @@ class Database {
   public function __construct() {
     $this->config = Config::get();
     $this->connect();
+    $this->con->set_charset("utf8");
   }
   
   public function disconnect() {
