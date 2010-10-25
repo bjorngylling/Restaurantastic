@@ -3,20 +3,20 @@
   
   if(is_signed_in()) {
     // Already logged in, redirect to book-list
-    redirect_to(Config::get()->signed_in_page());
+    redirect_to(Config::get()->signed_in_page);
     exit;
   }
-  elseif(isset($_POST['username'], $_POST['password'])) {
+  elseif(isset($_POST['email'], $_POST['password'])) {
     $user = new User();
-    if($user->sign_in($_POST['username'], $_POST['password'])) {
+    if($user->sign_in($_POST['email'], $_POST['password'])) {
       // Make sure the session variables are cleared
       $_SESSION = array();
       
       $_SESSION['user_id'] = $user->id;
-      redirect_to(Config::get()->signed_in_page());
+      redirect_to(Config::get()->signed_in_page);
     }
     else {
-      set_notice("Incorrect username or password!");
+      set_notice("Incorrect email or password!");
     }
   }
   
@@ -30,12 +30,13 @@
 <form action="" method="post">
   <fieldset>
     <legend>Sign in</legend>
-    <label for="username">Username: </label>
-    <input name="username" type="text" id="username" /><br />
+    <label for="email">Email: </label>
+    <input name="email" type="text" id="email"><br>
     <label for="password">Password: </label>
-    <input name="password" type="password" id="password" /><br />
-    <input name="submit" type="submit" class="button" value="Sign in!" /><br /><br />
-    <a href="<?php echo $fb_sign_in_url; ?>"><img src="media/fb_login_button.jpg" alt="Sign in using Facebook"></a>
+    <input name="password" type="password" id="password"><br>
+    <input name="submit" type="submit" class="button" value="Sign in!"><br><br>
+    <a href="<?php echo $fb_sign_in_url; ?>"><img src="media/fb_login_button.jpg" alt="Sign in using Facebook"></a><br><br>
+    <a href="sign_up.php">Sign up here!</a>
   </fieldset>
 </form>
 <?php

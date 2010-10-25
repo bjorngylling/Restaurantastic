@@ -6,7 +6,7 @@
 
 class User {
   public $id;
-  public $username;
+  public $name;
   
   private $db = false;
   private $config = false;
@@ -19,46 +19,66 @@ class User {
       $this->load_user($id);
   }
   
-  public function create_new($username, $password) {    
+  public function create_new($email, $password, $name) {    
     // Make sure the user doesn't exist
-    $username_query = $this->db->query(
+    $email_query = $this->db->query(
       "SELECT id 
        FROM users 
-       WHERE username = ?", 
-      array($username));
+       WHERE email = ?", 
+      array($email));
     
-    if($username_query) {
-      set_notice("Username already exists, please try another usename");
+    if($email_query) {
+      set_notice("There is already a account with that email in the system!");
       return false;
     }
     
     // Create the user
     $id = $this->db->query(
       "INSERT INTO users
-       (username, password)
-       VALUES (?, ?)",
-      array($username, hash_password($password)));
+       (email, name, password)
+       VALUES (?, ?, ?)",
+      array($email, $name, $this->hash_password($password)));
     
     $this->load_user($id);
     
     return true;
   }
   
-  public function oauth_create_new($oauth_id, $username) {
+  public function oauth_create_new($email, $name, $oauth_id) {
+    // Make sure the user doesn't exist
+    $email_query = $this->db->query(
+      "SELECT id 
+       FROM users 
+       WHERE email = ?", 
+      array($email));
+      
+    if($email_query) {
+      set_notice("There is already a account with that email in the system!");
+      return false;
+    }
     
+    // Create the user
+    $id = $this->db->query(
+      "INSERT INTO users
+       (email, name, oauth_id)
+       VALUES (?, ?, ?)",
+      array($email, $name, $oauth_id));
+    
+    $this->load_user($id);
+    
+    return true;
   }
   
-  public function sign_in($username, $password) {
+  public function sign_in($email, $password) {
     $user_data = $this->db->query(
-      "SELECT id, username
+      "SELECT id
        FROM users 
-       WHERE username = ? 
+       WHERE email = ? 
        AND password = ?", 
-      array($username, hash_password($password)));
+      array($email, $this->hash_password($password)));
     
     if($user_data) {
-      $this->load_user($user_data[0]['id'], 
-        $user_data[0]['username']);
+      $this->load_user($user_data[0]['id']);
       return true;
     }
     else {
@@ -68,14 +88,13 @@ class User {
   
   public function oauth_sign_in($oauth_id) {
     $user_data = $this->db->query(
-      "SELECT id, username
+      "SELECT id
        FROM users 
        WHERE oauth_id = ?", 
       array($oauth_id));
       
     if($user_data) {
-      $this->load_user($user_data[0]['id'], 
-        $user_data[0]['username']);
+      $this->load_user($user_data[0]['id']);
       return true;
     }
     else {
@@ -83,20 +102,15 @@ class User {
     }
   }
   
-  private function load_user($id, $username = false, $stylesheet_id = false) {
-    if($username AND $stylesheet_id) {
-      $this->id = $id;
-      $this->username = $username;
-    }
-    else {
-      $user_data = $this->db->query(
-        "SELECT username 
-         FROM users 
-         WHERE id = ?", 
-        array($id));
-      $this->id = $id;
-      $this->username = $user_data[0]['username'];
-    }
+  private function load_user($id) {
+    $user_data = $this->db->query(
+      "SELECT name, email 
+       FROM users 
+       WHERE id = ?", 
+      array($id));
+    $this->id = $id;
+    $this->name = $user_data[0]['name'];
+    $this->email = $user_data[0]['email'];
   }
   
   private function hash_password($password) {

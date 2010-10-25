@@ -7,12 +7,13 @@
     redirect_to(Config::get()->signed_in_page());
     exit;
   }
-  elseif(isset($_POST['username'], $_POST['email'], $_POST['password'], $_POST['confirm'])) {
+  elseif(isset($_POST['name'], $_POST['email'], $_POST['password'], $_POST['confirm'])) {
     if($_POST['password'] != $_POST['confirm']) {
       set_notice("Password confirmation failed, retype your password and try again.");
     }
     else {
-      if(User::create_new($_POST['username'], $_POST['password'])) {
+      $user = new User;
+      if($user->create_new($_POST['email'], $_POST['password'], $_POST['name'])) {
         redirect_to("sign_in.php");
       }
       else{
@@ -30,10 +31,10 @@
 <form action="" method="post">
   <fieldset>
     <legend>Sign up</legend>
-    <label for="username">Username: </label>
-    <input name="username" type="text" id="username" value="<?php echo $_POST['username']; ?>" /><br />
     <label for="email">Email: </label>
     <input name="email" type="text" id="email" value="<?php echo $_POST['email']; ?>" /><br />
+    <label for="name">Name: </label>
+    <input name="name" type="text" id="name" value="<?php echo $_POST['name']; ?>" /><br />
     <label for="password">Password: </label>
     <input name="password" type="password" id="password" /><br />
     <label for="confirm">Confirm: </label>
