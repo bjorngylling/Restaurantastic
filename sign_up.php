@@ -29,7 +29,7 @@
 ?>
 
 <form action="" method="post">
-  <fieldset>
+  <fieldset class="sign_form">
     <legend>Sign up</legend>
     <label for="email">Email: </label>
     <input name="email" type="text" id="email" value="<?php echo $_POST['email']; ?>" /><br />

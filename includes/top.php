@@ -7,6 +7,11 @@
     
     <link rel="stylesheet" href="media/css/reset.css" type="text/css" media="screen" charset="utf8">
     <link rel="stylesheet" href="media/css/master.css" type="text/css" media="screen" charset="utf8">
+    
+    <script type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js">
+    </script>
+
   </head>
   
   <body>
@@ -18,13 +23,15 @@
         <div id="menu">
           <?php if(is_signed_in()) { ?>
             <ul>
-    	        <li><a href="index.php">index</a> &bull; </li>
+    	        <li><a href="index.php">All restaurants</a> &bull; </li>
+    	        <li><a href="restaurants_manage.php">Manage your restaurants</a> &bull; </li>
+    	        <li><a href="view_messages.php">View your messages</a> &bull; </li>
               <li><a href="sign_out.php">Sign out</a></li>
             </ul>
           <?php }
           else { ?>
             <ul>
-    	        <li><a href="index.php">index</a> &bull; </li>
+    	        <li><a href="index.php">All restaurants</a> &bull; </li>
               <li><a href="sign_in.php">Sign in</a></li>
             </ul>
           <?php } ?>

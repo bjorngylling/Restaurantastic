@@ -30,7 +30,7 @@
 ?>
 
 <form action="" method="post">
-  <fieldset>
+  <fieldset class="sign_form">
     <legend>Enter information for your Facebook login</legend>
     <label for="email">Email: </label>
     <input name="email" type="text" id="email" value="<?php echo $email; ?>" /><br />

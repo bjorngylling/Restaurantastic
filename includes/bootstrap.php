@@ -6,6 +6,7 @@
   require_once('classes/config.php');
   require_once('classes/database.php');
   require_once('classes/user.php');
+  require_once('classes/restaurant.php');
   
 if(is_signed_in()) {
   // We're signed in, create the user-instance

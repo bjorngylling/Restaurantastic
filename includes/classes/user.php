@@ -7,6 +7,7 @@
 class User {
   public $id;
   public $name;
+  public $favorites;
   
   private $db = false;
   private $config = false;
@@ -16,7 +17,43 @@ class User {
     $this->db = new Database();
     
     if($id)
-      $this->load_user($id);
+      $this->load($id);
+  }
+  
+  public static function get_user_id_with_email($email) {
+    $db = new Database();
+    
+    $query = $db->query(
+      "SELECT id 
+       FROM users 
+       WHERE email = ?", 
+      array($email));
+    
+    return $query[0]['id'];
+  }
+  
+  public function add_favorite_restaurant($restaurant_id) {
+    $this->db->query(
+      "INSERT INTO users_restaurants
+       (user_id, restaurant_id)
+       VALUES (?, ?)",
+      array($this->id, $restaurant_id));
+  }
+  
+  public function remove_favorite_restaurant($restaurant_id) {
+    $this->db->query(
+      "DELETE FROM users_restaurants
+      WHERE user_id = ?
+      AND restaurant_id = ?",
+      array($this->id, $restaurant_id));
+  }
+  
+  public function list_all_messages() {
+    return $this->db->query(
+      "SELECT *
+       FROM messages
+       WHERE to_user_id = ?",
+      array($this->id));
   }
   
   public function create_new($email, $password, $name) {    
@@ -39,7 +76,7 @@ class User {
        VALUES (?, ?, ?)",
       array($email, $name, $this->hash_password($password)));
     
-    $this->load_user($id);
+    $this->load($id);
     
     return true;
   }
@@ -64,7 +101,7 @@ class User {
        VALUES (?, ?, ?)",
       array($email, $name, $oauth_id));
     
-    $this->load_user($id);
+    $this->load($id);
     
     return true;
   }
@@ -78,7 +115,7 @@ class User {
       array($email, $this->hash_password($password)));
     
     if($user_data) {
-      $this->load_user($user_data[0]['id']);
+      $this->load($user_data[0]['id']);
       return true;
     }
     else {
@@ -94,7 +131,7 @@ class User {
       array($oauth_id));
       
     if($user_data) {
-      $this->load_user($user_data[0]['id']);
+      $this->load($user_data[0]['id']);
       return true;
     }
     else {
@@ -102,7 +139,7 @@ class User {
     }
   }
   
-  private function load_user($id) {
+  private function load($id) {
     $user_data = $this->db->query(
       "SELECT name, email 
        FROM users 
@@ -111,6 +148,19 @@ class User {
     $this->id = $id;
     $this->name = $user_data[0]['name'];
     $this->email = $user_data[0]['email'];
+    
+    $user_favorites = $this->db->query(
+      "SELECT r.id, r.name
+       FROM restaurants AS r, users_restaurants AS ur
+       WHERE r.id = ur.restaurant_id
+       AND ur.user_id = ?",
+      array($this->id));
+      
+    if($user_favorites) {
+      foreach($user_favorites as $favorite) {
+        $this->favorites[$favorite['id']] = $favorite['name'];
+      }
+    }
   }
   
   private function hash_password($password) {

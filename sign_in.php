@@ -28,7 +28,7 @@
 <div id="fb-root"></div>
 
 <form action="" method="post">
-  <fieldset>
+  <fieldset class="sign_form">
     <legend>Sign in</legend>
     <label for="email">Email: </label>
     <input name="email" type="text" id="email"><br>

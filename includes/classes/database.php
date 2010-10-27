@@ -5,7 +5,6 @@
 */
 
 class Database {
-  static private $instance = false;
   private $config = false;
   private $con = false;
   
@@ -26,6 +25,9 @@ class Database {
     // Prepare the query
     $statement = $this->con->prepare($query);
     
+    if($this->config->debug) {
+      $this->print_query($query, $parameters);
+    }
     // If it's a static query $parameters will be empty, we don't need to bind
     if(sizeof($parameters) > 0) {
       $this->bind_parameters(&$statement, $parameters);
@@ -35,10 +37,6 @@ class Database {
     $statement->execute();
     
     $result = $this->query_results_to_array($statement);
-    
-    if($this->config->debug) {
-      $this->print_query($query, $parameters, $result);
-    }
     
     $statement->close();
     
@@ -129,14 +127,12 @@ class Database {
     return $results;
   }
   
-  private function print_query($query, $parameters, $result) {
+  private function print_query($query, $parameters) {
     for ($i = 0; $i < count($parameters); $i++) {
       $query = preg_replace('/\?/', "`".$parameters[$i]."`", $query, 1);
     }
 
-    echo "Result for query \"$query\" <br />";
-    print_r($result);
-    echo "<br /><br />";
+    echo "Running query: \"$query\" <br><br>";
   }
   
 }

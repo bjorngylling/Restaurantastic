@@ -61,12 +61,38 @@ img{
   font-weight:bold;
 }
 
+a{
+	color:#111;	
+	text-decoration:none;
+}
+a:hover{
+	color:#333;
+	text-decoration:underline;
+}
+
 #content{
   background-color:#8e9ca0;
   min-height:400px;
 	padding:20px;
 	margin:0;
 	font-size:0.7em;
+}
+#content h1{
+  font-size:1.5em;
+}
+#content h2{
+  font-size:1.3em;
+}
+#content p{
+  margin-bottom:1em;
+}
+#content a{
+  border-bottom:1px dotted #111;
+}
+#content a:hover{
+	color:#333;
+	text-decoration:none;
+	border-bottom:1px solid;
 }
 
 #footer{
@@ -84,22 +110,13 @@ img{
 	text-decoration:underline;
 }
 
-a{
-	color:#111;	
-	text-decoration:none;
-}
-a:hover{
-	color:#333;
-	text-decoration:underline;
-}
-
 .clearfloats{
 	clear:both;
 }
 
 /* FORM */
 
-fieldset {
+.sign_form {
   width:30%;
   margin:4em auto;
   padding:1em;
@@ -107,11 +124,12 @@ fieldset {
 }
 legend{
   text-align:center;
+  margin-bottom:1em;
 }
-label{
+.sign_form label{
   float:left;
   height:1.6em;
-  width:6em;
+  width:9em;
   margin-right:0.5em;
   padding-top:0.4em;
   text-align:right;
@@ -121,10 +139,35 @@ input{
   margin-top:0.2em;
 }
 .button{
+  display:block;
   height:2.3em;
   margin-top:1em;
 }
 
+/* END FORM */
+
+.right_col{ 
+  float:left;
+  height:450px;
+  width:420px;
+}
+.left_col{ 
+  float:left;
+  height:450px;
+  width:520px;
+}
+
+.restaurant_list{
+  margin-top:1.5em;
+}
+
+.review_by{
+  font-style:italic;
+}
+
+.nofloat{
+  float:none;
+}
 
 
 
