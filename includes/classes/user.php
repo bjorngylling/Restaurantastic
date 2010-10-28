@@ -7,7 +7,7 @@
 class User {
   public $id;
   public $name;
-  public $favorites;
+  public $favorites = array();
   
   private $db = false;
   private $config = false;

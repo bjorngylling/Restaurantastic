@@ -9,6 +9,16 @@
   
   $restaurant_list = Restaurant::list_all($user->id);
 ?>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("[id*='delete-']").click(function() {
+      var id = $(this).attr("id").match(/\d+/);
+      $.post("ajax/delete_restaurant.php", { restaurant_id: id[0] } );
+      $(this).closest("p").remove();
+    });
+  });
+</script>
+
 <div class="left_col">
 
 <h2>Your restaurants</h2>
@@ -17,7 +27,7 @@
 if($restaurant_list) {
   foreach($restaurant_list as $restaurant) { ?>
     <div class="restaurant">
-      <p><a href="restaurant_view.php?id=<?php echo $restaurant['id'] ?>"><?php echo $restaurant['name'] ?></a></p>
+      <p><a href="restaurant_view.php?id=<?php echo $restaurant->id ?>"><?php echo $restaurant->name ?></a> <a href="#" id="delete-<?php echo $restaurant->id ?>">Delete this restaurant</a></p>
     </div>
   <?php } 
 }

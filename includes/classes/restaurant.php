@@ -56,18 +56,46 @@ class Restaurant {
   public static function list_all($user_id = false) {
     $db = new Database();
     if($user_id) {
-      $result = $db->query( 
-        "SELECT id, name
+      $list_all = $db->query( 
+        "SELECT id
          FROM restaurants
          WHERE added_by_id = ?
          ORDER BY id DESC",
         array($user_id));
     }
     else {
-      $result = $db->query(
-        "SELECT id, name
+      $list_all = $db->query(
+        "SELECT id
          FROM restaurants
          ORDER BY id DESC");
+    }
+    
+    $result = array();
+    foreach($list_all as $restaurant) {
+      $result[] = new Restaurant($restaurant['id']);
+    }
+    
+    return $result;
+  }
+  
+  public static function search($search_string) {
+    $db = new Database();
+    $search_string = '%' . $search_string . '%';
+    
+    $search_list = $db->query(
+      "SELECT id
+       FROM restaurants
+       WHERE lower(name) LIKE lower(?)
+       ORDER BY id DESC",
+      array($search_string));
+    
+    if(!$search_list) {
+      return false;
+    }
+      
+    $result = array();    
+    foreach($search_list as $restaurant) {
+      $result[] = new Restaurant($restaurant['id']);
     }
     
     return $result;
@@ -78,19 +106,26 @@ class Restaurant {
     return $db->query("SELECT * FROM food_types");
   }
   
-  public static function search($search_string) {
-    $db = new Database();
-    $search_string = '%' . $search_string . '%';
-    $result = $db->query(
-        "SELECT title, author, isbn
-         FROM books
-         WHERE title LIKE ?
-         OR author LIKE ?
-         OR isbn LIKE ?
-         ORDER BY id DESC",
-         array($search_string, $search_string, $search_string));
-         
-    return $result;
+  public function delete() {
+    $this->db->query(
+      "DELETE FROM restaurants
+       WHERE id = ?", 
+      array($this->id));
+      
+    $this->db->query(
+      "DELETE FROM restaurants_food_types
+       WHERE restaurant_id = ?", 
+      array($this->id));
+      
+    $this->db->query(
+      "DELETE FROM users_restaurants
+       WHERE restaurant_id = ?", 
+      array($this->id));
+      
+    $this->db->query(
+      "DELETE FROM reviews
+       WHERE restaurant_id = ?", 
+      array($this->id));
   }
   
   public function save() {

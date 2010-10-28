@@ -160,6 +160,9 @@ input{
 .restaurant_list{
   margin-top:1.5em;
 }
+.restaurant_name{
+  font-size:1.3em;
+}
 
 .review_by{
   font-style:italic;

@@ -36,10 +36,10 @@
     $("#favorite_link").click(function() {
       var url;
       if($("#favorite_link").attr("class") == "add_favorite") {
-        url = "ajax/favorite.php?add=1&restaurant_id=<?php echo $restaurant->id; ?>";
+        url = "http://tdp013.gyllingdata.se/restaurantastic/ajax/favorite.php?add=1&restaurant_id=<?php echo $restaurant->id; ?>";
       }
       else if($("#favorite_link").attr("class") == "remove_favorite") {
-        url = "ajax/favorite.php?add=0&restaurant_id=<?php echo $restaurant->id; ?>";
+        url = "http://tdp013.gyllingdata.se/restaurantastic/ajax/favorite.php?add=0&restaurant_id=<?php echo $restaurant->id; ?>";
       }
       $.ajax({
         url: url,
@@ -87,7 +87,7 @@
 </p>
 <p>Added by: <?php echo $restaurant->added_by->name; ?></p>
 <?php if($restaurant->added_by->id == $user->id) { ?>
-  <p><a href="restaurant_add_edit.php?id=<?php echo $restaurant->id; ?>">Edit this restaurant</a></p>
+  <p><a href="http://tdp013.gyllingdata.se/restaurantastic/restaurant_add_edit.php?id=<?php echo $restaurant->id; ?>">Edit this restaurant</a></p>
 <?php } ?>
 <?php if(is_signed_in()) { ?>
   <p><a href="#" id="favorite_link" class="<?php if(isset($user->favorites[$restaurant->id])) { echo 'remove_favorite">Remove from favorites'; } else { echo 'add_favorite">Add to favorites'; } ?></a></p>
