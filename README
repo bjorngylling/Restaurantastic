@@ -1,0 +1,1 @@
+A school-project in PHP. It includes something you could call a simple framework (with some imagination perhaps) for interacting with mysqli. There is support for both regular authentication as well as Facebook OAuth.
